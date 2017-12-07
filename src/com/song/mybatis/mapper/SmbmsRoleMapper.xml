@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.song.mybatis.mapper.SmbmsRoleMapper">
+	<select id="getRoleList" resultType="Role">
+		SELECT * FROM smbms_role
+	</select>
+	<select id="getRoles" parameterType="Role" resultType="Role">
+		SELECT * FROM `smbms_role` r
+		<where>
+
+			<if test="roleCode!=null and roleCode!=''">
+				and r.`roleCode`=#{roleCode}
+			</if>
+
+		</where>
+	</select>
+	<insert id="insert" parameterType="Role">
+		INSERT INTO
+		`smbms_role`(`roleCode`,`roleName`,`createdBy`,`creationDate`,`modifyBy`,`modifyDate`)
+		VALUES
+		(#{roleCode},#{roleName},#{createdBy},#{creationDate},#{modifyBy},#{modifyDate})
+	</insert>
+
+	<update id="updateByRole" parameterType="Role">
+		update smbms_role
+		<set>
+			<if test="roleCode != null">
+				roleCode = #{roleCode,jdbcType=VARCHAR},
+			</if>
+			<if test="roleName != null">
+				roleName = #{roleName,jdbcType=VARCHAR},
+			</if>
+			<if test="createdBy != null">
+				createdBy = #{createdBy,jdbcType=BIGINT},
+			</if>
+			<if test="creationDate != null">
+				creationDate = #{creationDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyBy != null">
+				modifyBy = #{modifyBy,jdbcType=BIGINT},
+			</if>
+			<if test="modifyDate != null">
+				modifyDate = #{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<select id="selectByPrimaryKey" resultType="Role" parameterType="int">
+		select * from smbms_role
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<delete id="deleteByRole" parameterType="int">
+		delete from smbms_role
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+
+</mapper>

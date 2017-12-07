@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:aop="http://www.springframework.org/schema/aop"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xmlns:p="http://www.springframework.org/schema/p"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+			http://www.springframework.org/schema/context
+    		http://www.springframework.org/schema/context/spring-context-3.2.xsd"
+    		>
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:database.properties"></property>
+	</bean>
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" >
+		<property name="driverClassName" value="${driver}" />
+		<property name="url" value="${url}" />
+		<property name="username" value="${username}" />
+		<property name="password" value="${password}" />
+	</bean>
+	
+	<bean id="sqlSessionFactroy" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mybatis.xml" />
+		  <property name="typeAliasesPackage" value="com.song.entity" />   
+		<property name="mapperLocations">
+			<list>
+				<!-- <value>classpath:com/tcf/entity/SmbmsUserMapper.xml</value> -->
+				<value>classpath*:com/song/mybatis/mapper/*.xml</value>
+			</list>
+		</property>
+	</bean>
+	<!-- dao -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer" scope="singleton">
+		<property name="basePackage" value="com.song.mybatis.mapper" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactroy" />
+	</bean>
+	
+	<!-- 开启注解  -->
+	<context:component-scan base-package="com.song.service" />
+	<!-- 事务声明 -->
+	<bean id="tx" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<tx:advice id="txAdvice" transaction-manager="tx">
+		<tx:attributes>
+			<tx:method name="find*" propagation="REQUIRED"/>
+			<tx:method name="login*" propagation="REQUIRED"/>
+				<tx:method name="insert*" propagation="REQUIRED"/>
+			<tx:method name="add*" propagation="REQUIRED"/>
+			<tx:method name="del*" propagation="REQUIRED"/>
+			<tx:method name="update*" propagation="REQUIRED"/>
+			<tx:method name="*" read-only="true" propagation="REQUIRED"/>
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<aop:pointcut expression="execution(* com.song.service.impl..*.*(..))" id="service"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="service"/>
+	</aop:config>
+</beans>

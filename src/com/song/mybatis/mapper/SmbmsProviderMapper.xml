@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.song.mybatis.mapper.SmbmsProviderMapper" >
+  <insert id="insertSelective" parameterType="Provider" >
+    insert into smbms_provider
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="proCode != null" >
+        proCode,
+      </if>
+      <if test="proName != null" >
+        proName,
+      </if>
+      <if test="proDesc != null" >
+        proDesc,
+      </if>
+      <if test="proContact != null" >
+        proContact,
+      </if>
+      <if test="proPhone != null" >
+        proPhone,
+      </if>
+      <if test="proAddress != null" >
+        proAddress,
+      </if>
+      <if test="proFax != null" >
+        proFax,
+      </if>
+      <if test="createdBy != null" >
+        createdBy,
+      </if>
+      <if test="creationDate != null" >
+        creationDate,
+      </if>
+      <if test="modifyDate != null" >
+        modifyDate,
+      </if>
+      <if test="modifyBy != null" >
+        modifyBy,
+      </if>
+       <if test="companyLicPicPath != null" >
+        companyLicPicPath,
+      </if>
+       <if test="orgCodePicPath != null" >
+        orgCodePicPath,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="proCode != null" >
+        #{proCode,jdbcType=VARCHAR},
+      </if>
+      <if test="proName != null" >
+        #{proName,jdbcType=VARCHAR},
+      </if>
+      <if test="proDesc != null" >
+        #{proDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="proContact != null" >
+        #{proContact,jdbcType=VARCHAR},
+      </if>
+      <if test="proPhone != null" >
+        #{proPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="proAddress != null" >
+        #{proAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="proFax != null" >
+        #{proFax,jdbcType=VARCHAR},
+      </if>
+      <if test="createdBy != null" >
+        #{createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyBy != null" >
+        #{modifyBy,jdbcType=BIGINT},
+      </if>
+      <if test="companyLicPicPath!=null">
+      	  #{companyLicPicPath,jdbcType=VARCHAR},
+      </if>
+        <if test="orgCodePicPath!=null">
+      	  #{orgCodePicPath,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="Provider">
+    update smbms_provider
+    <set >
+      <if test="proCode != null" >
+        proCode = #{proCode,jdbcType=VARCHAR},
+      </if>
+      <if test="proName != null" >
+        proName = #{proName,jdbcType=VARCHAR},
+      </if>
+      <if test="proDesc != null" >
+        proDesc = #{proDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="proContact != null" >
+        proContact = #{proContact,jdbcType=VARCHAR},
+      </if>
+      <if test="proPhone != null" >
+        proPhone = #{proPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="proAddress != null" >
+        proAddress = #{proAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="proFax != null" >
+        proFax = #{proFax,jdbcType=VARCHAR},
+      </if>
+      <if test="createdBy != null" >
+        createdBy = #{createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="creationDate != null" >
+        creationDate = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        modifyDate = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyBy != null" >
+        modifyBy = #{modifyBy,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+   <delete id="deleteByPrimaryKey" >
+	    delete from smbms_provider
+	    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <select id="selectByPrimaryKey" resultType="Provider">
+    select * from smbms_provider
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+ 
+ 
+ <select id="getProviders" parameterType="providerPack" resultType="providerPack">
+ 	SELECT * FROM smbms_provider  p
+ 	<where>
+ 		<if test="proCode!=null and proCode!='' ">
+ 			and  p.proCode LIKE '%${proCode}%'
+ 		</if>
+ 		<if test="proName!=null and proName!=''">
+ 			and p.proName LIKE '%${proName}%'
+ 		</if>
+ 		
+ 	</where>
+ 	
+ </select>
+ 
+  <select id="getProviderPage"  resultType="providerPack" parameterType="providerPack">
+ 	SELECT * FROM smbms_provider  p
+ 	<where>
+ 		<if test="proCode!=null and proCode!='' ">
+ 			and  p.proCode LIKE '%${proCode}%'
+ 		</if>
+ 		<if test="proName!=null and proName!=''">
+ 			and p.proName LIKE '%${proName}%'
+ 		</if>
+ 	</where>
+ 	LIMIT  #{currentPageNo},#{pageSize};	
+ </select>
+ 
+</mapper>

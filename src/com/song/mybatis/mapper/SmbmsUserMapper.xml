@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.song.mybatis.mapper.SmbmsUserMapper" >
+
+ <insert id="insert" parameterType="User" >
+    insert into smbms_user (id, userCode, userName, 
+      userPassword, gender, birthday, 
+      phone, address, userRole, 
+      createdBy, creationDate, modifyBy, 
+      modifyDate)
+    values (#{id,jdbcType=BIGINT}, #{usercode,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{userpassword,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER}, #{birthday,jdbcType=DATE}, 
+      #{phone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{userrole,jdbcType=INTEGER}, 
+      #{createdby,jdbcType=BIGINT}, #{creationdate,jdbcType=TIMESTAMP}, #{modifyby,jdbcType=BIGINT}, 
+      #{modifydate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="User" >
+    insert into smbms_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+     
+      <if test="userCode != null" >
+        userCode,
+      </if>
+      <if test="userName != null" >
+        userName,
+      </if>
+      <if test="userPassword != null" >
+        userPassword,
+      </if>
+      <if test="gender != null" >
+        gender,
+      </if>
+      <if test="birthday != null" >
+        birthday,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="userRole != null" >
+        userRole,
+      </if>
+      <if test="createdBy != null" >
+        createdBy,
+      </if>
+      <if test="creationDate != null" >
+        creationDate,
+      </if>
+      <if test="modifyBy != null" >
+        modifyBy,
+      </if>
+      <if test="modifyDate != null" >
+        modifyDate,
+      </if>
+    </trim>
+	
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userCode != null" >
+      
+        #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null" >
+        #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="userRole != null" >
+        #{userRole,jdbcType=INTEGER},
+      </if>
+      <if test="createdBy != null" >
+        #{createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyBy != null" >
+        #{modifyBy,jdbcType=BIGINT},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+   <update id="updateByPrimaryKey" parameterType="User" >
+    update smbms_user
+    <set>
+      <if test="userCode != null" >
+        userCode = #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        userName = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null" >
+        userPassword = #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="userRole != null" >
+        userRole = #{userRole,jdbcType=INTEGER},
+      </if>
+      <if test="createdBy != null" >
+        createdBy = #{createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="creationDate != null" >
+        creationDate = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyBy != null" >
+        modifyBy = #{modifyBy,jdbcType=BIGINT},
+      </if>
+      <if test="modifyDate != null" >
+        modifyDate = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+	<update id="updatePwd">
+		UPDATE smbms_user u SET u.userPassword=#{newUserpassword}  WHERE  u.id=#{id} AND u.userPassword=#{userpassword}
+	</update>
+ 
+    <delete id="deleteUserById">
+	    delete from smbms_user
+	    where id = #{id,jdbcType=BIGINT}
+ 	 </delete>
+  
+	<select id="getLoginUser"  resultType="User">
+		SELECT * FROM smbms_user u WHERE u.userCode=#{usercode} and u.userPassword=#{userpassword} 
+	</select>
+	<select id="getUserList" resultType="User" >
+		SELECT u.*,r.roleName roleName FROM smbms_user u INNER JOIN smbms_role r ON u.userRole=r.id 
+		<where>
+			<if test="userName!=null and userName!=''">
+				and u.userName LIKE '%${userName}%'
+			</if>
+			<if test="userRole!=null and userRole!=''">
+				AND u.userRole=#{userRole}
+			</if>
+		</where>
+		 LIMIT  #{currentPageNo},#{pageSize};
+	</select>
+	<select id="getUserCount"  resultType="int">
+		SELECT count(*) FROM smbms_user u
+		<where>
+			<if test="userName!=null and userName!=''">
+				and u.userName LIKE '%${userName}%'
+			</if>
+			<if test="userRole!=null and userRole!=''">
+				AND u.userRole=#{userRole}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getUserByUserCode" resultType="User">
+		SELECT * FROM smbms_user u
+		<trim prefix="where" prefixOverrides="and |or">
+			u.userCode=#{userCode}
+		</trim> 
+	</select>
+	<select id="selectByPrimaryKey" resultType="User">
+		SELECT u.*,r.roleName roleName FROM smbms_user u INNER JOIN smbms_role r ON u.userRole=r.id  WHERE u.id=#{id}
+	</select>	
+	
+	
+	
+	
+</mapper>

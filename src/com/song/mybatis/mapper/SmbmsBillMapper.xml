@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.song.mybatis.mapper.SmbmsBillMapper" >
+
+  <select id="getBills" parameterType="Bill" resultType="Bill">
+  		SELECT * FROM smbms_bill b
+  		<where>
+  			<if test="providerId!=null and providerId!='' ">
+  				and b.providerId =#{providerId}
+  			</if>
+  		</where>
+  </select>
+  
+  <select id="getBillsPage" resultType="Bill">
+  		SELECT b.*,p.proName providerName FROM smbms_bill b  INNER JOIN smbms_provider p ON b.providerId=p.id 
+  		<where>
+  			<if test="productName!=null and productName !=''">
+  				and b.productName  LIKE '%${productName}%'
+  			</if>
+  			<if test="providerId!=null and providerId!=''">
+  				AND b.providerId=#{providerId}
+  			</if>
+  			<if test="isPayment!=null and isPayment!=''">
+  				and b.isPayment=#{isPayment}
+  			</if>
+  		</where>
+  		 LIMIT  #{currentPageNo},#{pageSize}
+  </select>
+  
+  <select id="getBillCount" resultType="int">
+  		SELECT count(1) FROM smbms_bill b
+  		<where>
+  			<if test="productName!=null and productName !=''">
+  				and b.productName  LIKE '%${productName}%'
+  			</if>
+  			<if test="providerId!=null and providerId!=''">
+  				AND b.providerId=#{providerId}
+  			</if>
+  			<if test="isPayment!=null and isPayment!=''">
+  				and b.isPayment=#{isPayment}
+  			</if>
+  		</where>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultType="Bill">
+  	SELECT b.*,p.proName providerName FROM smbms_bill b  INNER JOIN smbms_provider p ON b.providerId=p.id 
+    WHERE b.id=#{id}
+  </select>
+  
+   <insert id="insertSelective" parameterType="Bill" >
+    insert into smbms_bill
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="billCode != null" >
+        billCode,
+      </if>
+      <if test="productName != null" >
+        productName,
+      </if>
+      <if test="productDesc != null" >
+        productDesc,
+      </if>
+      <if test="productUnit != null" >
+        productUnit,
+      </if>
+      <if test="productCount != null" >
+        productCount,
+      </if>
+      <if test="totalPrice != null" >
+        totalPrice,
+      </if>
+      <if test="isPayment != null" >
+        isPayment,
+      </if>
+      <if test="createdBy != null" >
+        createdBy,
+      </if>
+      <if test="creationDate != null" >
+        creationDate,
+      </if>
+      <if test="modifyBy != null" >
+        modifyBy,
+      </if>
+      <if test="modifyDate != null" >
+        modifyDate,
+      </if>
+      <if test="providerId != null" >
+        providerId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="billCode != null" >
+        #{billCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productDesc != null" >
+        #{productDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="productUnit != null" >
+        #{productUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="productCount != null" >
+        #{productCount,jdbcType=DECIMAL},
+      </if>
+      <if test="totalPrice != null" >
+        #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="isPayment != null" >
+        #{isPayment,jdbcType=INTEGER},
+      </if>
+      <if test="createdBy != null" >
+        #{createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyBy != null" >
+        #{modifyBy,jdbcType=BIGINT},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="providerId != null" >
+        #{providerId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+    <update id="updateByBill" parameterType="Bill" >
+    update smbms_bill
+    <set >
+      <if test="billCode != null" >
+        billCode = #{billCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        productName = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productDesc != null" >
+        productDesc = #{productDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="productUnit != null" >
+        productUnit = #{productUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="productCount != null" >
+        productCount = #{productCount,jdbcType=DECIMAL},
+      </if>
+      <if test="totalPrice != null" >
+        totalPrice = #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="isPayment != null" >
+        isPayment = #{isPayment,jdbcType=INTEGER},
+      </if>
+      <if test="createdBy != null" >
+        createdBy = #{createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="creationDate != null" >
+        creationDate = #{creationdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyBy != null" >
+        modifyBy = #{modifyBy,jdbcType=BIGINT},
+      </if>
+      <if test="modifyDate != null" >
+        modifyDate = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="providerId != null" >
+        providerId = #{providerId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+    <delete id="deleteByBill" parameterType="int" >
+    delete from smbms_bill
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+</mapper>
